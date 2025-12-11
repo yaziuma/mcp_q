@@ -1,0 +1,3 @@
+- All comments, docs, and user-facing content should be described with English
+- During the chat, the answer should be Japanese
+- Do not commit or push before the permission

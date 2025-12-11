@@ -1,0 +1,7 @@
+# Dependencies
+node_modules/
+API/
+.DS_Store
+
+# Amazon Q MCP configuration (contains sensitive tokens)
+.amazonq/mcp.json

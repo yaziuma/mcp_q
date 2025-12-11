@@ -1,0 +1,21 @@
+{
+  "name": "circleci-demo",
+  "version": "1.0.0",
+  "description": "CircleCI MCP Demo Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest",
+    "start": "node index.js",
+    "lint": "eslint ."
+  },
+
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "jest-junit": "^16.0.0",
+    "eslint": "^8.0.0",
+    "supertest": "^6.3.0"
+  }
+}
