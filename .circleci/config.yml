@@ -38,15 +38,22 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          name: Build application
-          command: npm start &
+          name: Start application in background
+          command: npm start
+          background: true
       - run:
-          name: Wait for server
-          command: sleep 5
-      - run:
-          name: Test server health
+          name: Wait for server to start
           command: |
-            curl -f http://localhost:3000/api/health || exit 1
+            for i in {1..30}; do
+              if curl -f http://localhost:3000/api/health; then
+                echo "Server is ready!"
+                exit 0
+              fi
+              echo "Waiting for server... ($i/30)"
+              sleep 2
+            done
+            echo "Server failed to start"
+            exit 1
 
 workflows:
   test-and-build:
