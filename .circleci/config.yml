@@ -1,14 +1,59 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@5.1.0
+
 jobs:
-  hello-job:
+  test:
     docker:
-      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
+      - image: cimg/node:18.17
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run tests
+          command: npm test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+
+  lint:
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run linter
+          command: npm run lint
+
+  build:
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Build application
+          command: npm start &
+      - run:
+          name: Wait for server
+          command: sleep 5
+      - run:
+          name: Test server health
+          command: |
+            curl -f http://localhost:3000/api/health || exit 1
 
 workflows:
-  my-workflow:
+  test-and-build:
     jobs:
-      - hello-job
+      - test
+      - lint
+      - build:
+          requires:
+            - test
+            - lint
